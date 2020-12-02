@@ -36,7 +36,7 @@ struct ContentView: View {
                 }
             )
         }
-        .sheet(isPresented: $showingSheet, onDismiss: loadImage) {
+        .sheet(isPresented: $showingSheet, onDismiss: sheetDismissed) {
             
             if (self.sheetMode == .imagePicker) {
                 ImagePicker(image: self.$personImage)
@@ -51,8 +51,16 @@ struct ContentView: View {
         
     }
     
-    func loadImage() {
+    func sheetDismissed() {
         // load image
+        if self.sheetMode == .imagePicker {
+            // Open the sheet in the image saver mode...
+            self.sheetMode = .imageSaver
+            self.showingSheet = true
+        }
+        else if self.sheetMode == .imageSaver {
+            
+        }
     }
 }
 
