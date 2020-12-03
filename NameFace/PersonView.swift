@@ -26,9 +26,55 @@ struct PersonView: View {
     }
 }
 
+struct PersonForm: View {
+    var photo: Image?
+    @State private var name: String = ""
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                if let photo = self.photo {
+                    photo
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                        .padding(.top)
+                }
+                else {
+                    Rectangle()
+                        .fill(Color.secondary)
+                        .frame(height: 200)
+                }
+
+                Form {
+                    TextField("Name", text: $name)
+                    
+                }
+                
+                
+                
+                Spacer()
+            }
+            .navigationTitle("Add Person")
+            .navigationBarItems(leading: Button("Cancel") {
+                // Cancel and dismiss
+            })
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    // Cancel and dismiss
+                },
+                trailing: Button("Save") {
+                    // Save and dismiss
+                }
+            )
+        }
+    }
+}
+
 struct PersonView_Previews: PreviewProvider {
     static var previews: some View {
         PersonView()
+        PersonForm(photo: Image("hat-person-phone"))
         PersonRow(name: "Paul Houghton", photoFile: "12345  ")
             .previewLayout(.fixed(width: 300, height: 70))
     }

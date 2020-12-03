@@ -30,10 +30,12 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("NameFace")
-            .navigationBarItems(trailing: Button("Add") {
-                    self.showingSheet = true
-                    self.sheetMode = .imagePicker
-                }
+            .navigationBarItems(
+                trailing:
+                    Button("Add") {
+                        self.showingSheet = true
+                        self.sheetMode = .imagePicker
+                    }
             )
         }
         .sheet(isPresented: $showingSheet, onDismiss: sheetDismissed) {
@@ -42,12 +44,15 @@ struct ContentView: View {
                 ImagePicker(image: self.$personImage)
             }
             else {
-                PersonRow(name: "Test", photoFile: "TEST")
+                if let photo = self.personImage {
+                    PersonForm(photo: Image(uiImage: photo))
+                }
+                else {
+                    PersonForm(photo: nil)
+                }
+                
             }
         }
-//        .sheet(isPresented: $showingImageSaver, content: {
-//            PersonRow(name: "Test", photoFile: "TEST")
-//        })
         
     }
     
