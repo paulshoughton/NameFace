@@ -27,8 +27,9 @@ struct PersonView: View {
 }
 
 struct PersonForm: View {
+    @Environment(\.presentationMode) var presentationMode
     var photo: Image?
-    @State private var name: String = ""
+    @Binding var name: String
     
     var body: some View {
         NavigationView {
@@ -51,20 +52,17 @@ struct PersonForm: View {
                     
                 }
                 
-                
-                
                 Spacer()
             }
             .navigationTitle("Add Person")
-            .navigationBarItems(leading: Button("Cancel") {
-                // Cancel and dismiss
-            })
             .navigationBarItems(
                 leading: Button("Cancel") {
                     // Cancel and dismiss
+                    self.presentationMode.wrappedValue.dismiss()
                 },
                 trailing: Button("Save") {
                     // Save and dismiss
+                    self.presentationMode.wrappedValue.dismiss()
                 }
             )
         }
@@ -72,9 +70,10 @@ struct PersonForm: View {
 }
 
 struct PersonView_Previews: PreviewProvider {
+    
     static var previews: some View {
         PersonView()
-        PersonForm(photo: Image("hat-person-phone"))
+        PersonForm(photo: Image("hat-person-phone"), name: .constant("Test"))
         PersonRow(name: "Paul Houghton", photoFile: "12345  ")
             .previewLayout(.fixed(width: 300, height: 70))
     }

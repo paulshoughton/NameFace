@@ -18,7 +18,7 @@ struct ContentView: View {
 //    @State private var showingImageSaver = false
     
     @State private var personImage: UIImage?
-
+    @State private var personName: String = ""
     
     @State var people: [Person] = [Person]()
     
@@ -45,10 +45,10 @@ struct ContentView: View {
             }
             else {
                 if let photo = self.personImage {
-                    PersonForm(photo: Image(uiImage: photo))
+                    PersonForm(photo: Image(uiImage: photo), name: self.$personName)
                 }
                 else {
-                    PersonForm(photo: nil)
+                    PersonForm(photo: nil, name:self.$personName)
                 }
                 
             }
@@ -57,15 +57,33 @@ struct ContentView: View {
     }
     
     func sheetDismissed() {
-        // load image
-        if self.sheetMode == .imagePicker {
+        if self.sheetMode == .imagePicker
+            && self.personImage != nil {
             // Open the sheet in the image saver mode...
             self.sheetMode = .imageSaver
             self.showingSheet = true
         }
         else if self.sheetMode == .imageSaver {
             
+            // If the image was saved
+            if 1==1 {
+                // PROPER LOGIC CHECK NEEDED
+                saveNameFace()
+            }
+
+            // Prepare for next photo to be selected
+            reset()
         }
+    }
+    
+    func saveNameFace() {
+        print("Name: \(self.personName)")
+    }
+    
+    // Reset data ready for next
+    func reset() {
+        self.personImage = nil
+        self.personName = ""
     }
 }
 
