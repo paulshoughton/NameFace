@@ -26,7 +26,12 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 List(people, id: \.id) { person in
-                    PersonRow(name: person.name, photoFile: person.photoFile)
+                    NavigationLink(
+                        destination:
+                            PersonView(person: person)
+                    ) {
+                        PersonRow(person: person)
+                    }
                 }
             }
             .navigationTitle("NameFace")
@@ -38,6 +43,7 @@ struct ContentView: View {
                     }
             )
         }
+        .onAppear(perform: loadDataFromDocumentsDirectory)
         .sheet(isPresented: $showingSheet, onDismiss: sheetDismissed) {
             
             if (self.sheetMode == .imagePicker) {
@@ -50,7 +56,6 @@ struct ContentView: View {
                 else {
                     PersonForm(photo: nil, name:self.$personName)
                 }
-                
             }
         }
         
@@ -77,13 +82,56 @@ struct ContentView: View {
     }
     
     func saveNameFace() {
-        print("Name: \(self.personName)")
+//        print("Name: \(self.personName)")
+
+        let person = Person(name: personName)
+        
+        // Give the photo a name base on the UUID of the person.
+        let url = Person.getDocumentsDirectory().appendingPathComponent(person.photoFile)
+        
+        if let jpegData = personImage?.jpegData(compressionQuality: 0.8) {
+            try? jpegData.write(to: url, options: [.atomicWrite, .completeFileProtection])
+        }
+        
+        self.people.append(person)
+        saveDataToDocumentsDirectory()
     }
     
     // Reset data ready for next
     func reset() {
         self.personImage = nil
         self.personName = ""
+    }
+    
+    func saveDataToDocumentsDirectory() {
+//        let str = "Test Message"
+        let encoder = JSONEncoder()
+
+        if let data = try? encoder.encode(self.people) {
+            let url = Person.getDocumentsDirectory().appendingPathComponent("NameFaceData.json")
+            
+            do {
+                try data.write(to: url)
+//                let input = try String(contentsOf: url)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func loadDataFromDocumentsDirectory() {
+        let url = Person.getDocumentsDirectory().appendingPathComponent("NameFaceData.json")
+        
+        let decoder = JSONDecoder()
+        
+        if let data = try? Data(contentsOf: url) {
+            if let loaded = try? decoder.decode([Person].self, from: data) {
+                self.people = loaded
+            }
+            else {
+                fatalError("Cannot decode the people data.")
+            }
+        }
     }
 }
 

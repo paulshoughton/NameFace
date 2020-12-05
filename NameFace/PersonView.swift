@@ -8,21 +8,46 @@
 import SwiftUI
 
 struct PersonRow: View {
-    var name: String
-    var photoFile: String
+    var person: Person
     
     var body: some View {
         HStack {
-            Text(self.photoFile)
-            Text(self.name)
+            if let uiImage = Person.loadPhoto(photoFile: Person.getDocumentsDirectory().appendingPathComponent(self.person.photoFile) ) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 44, height: 44)
+            }
+            else {
+                Rectangle()
+                    .fill(Color.secondary)
+                    .frame(width:44, height: 44)
+            }
+            Text(self.person.name)
             Spacer()
         }
     }
 }
 
 struct PersonView: View {
+    var person: Person
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            if let uiImage = Person.loadPhoto(photoFile: Person.getDocumentsDirectory().appendingPathComponent(self.person.photoFile) ) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+            }
+            else {
+                Rectangle()
+                    .fill(Color.secondary)
+                    .frame(width:200, height: 200)
+            }
+            Text(self.person.name)
+            Spacer()
+        }
     }
 }
 
@@ -72,9 +97,9 @@ struct PersonForm: View {
 struct PersonView_Previews: PreviewProvider {
     
     static var previews: some View {
-        PersonView()
+        PersonView(person: Person(name: "Paul Houghton"))
         PersonForm(photo: Image("hat-person-phone"), name: .constant("Test"))
-        PersonRow(name: "Paul Houghton", photoFile: "12345  ")
+        PersonRow(person: Person(name: "Paul Houghton"))
             .previewLayout(.fixed(width: 300, height: 70))
     }
 }
