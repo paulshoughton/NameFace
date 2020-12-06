@@ -7,12 +7,16 @@
 import SwiftUI
 import Foundation
 
-struct Person: Identifiable, Codable {
+struct Person: Identifiable, Codable, Comparable {
     var id = UUID()
     var name: String
     
     var photoFile: String {
         return "\(self.id).jpg"
+    }
+    
+    static func < (lhs: Person, rhs: Person) -> Bool {
+        lhs.name < rhs.name
     }
     
     static func loadPhoto(photoFile: URL) -> UIImage? {

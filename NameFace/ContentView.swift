@@ -14,8 +14,7 @@ enum SheetMode {
 struct ContentView: View {
     @State private var showingSheet = false
     @State private var sheetMode: SheetMode = .imagePicker
-//    @State private var showingImagePicker = false
-//    @State private var showingImageSaver = false
+    @State private var saveImage = false
     
     @State private var personImage: UIImage?
     @State private var personName: String = ""
@@ -25,17 +24,21 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                List(people, id: \.id) { person in
-                    NavigationLink(
-                        destination:
-                            PersonView(person: person)
-                    ) {
-                        PersonRow(person: person)
+                List {
+                    ForEach(people, id: \.id) { person in
+                        NavigationLink(
+                            destination:
+                                PersonView(person: person)
+                        ) {
+                            PersonRow(person: person)
+                        }
                     }
+                    .onDelete(perform: deletePerson)
                 }
             }
             .navigationTitle("NameFace")
             .navigationBarItems(
+                leading: EditButton(),
                 trailing:
                     Button("Add") {
                         self.showingSheet = true
@@ -51,10 +54,10 @@ struct ContentView: View {
             }
             else {
                 if let photo = self.personImage {
-                    PersonForm(photo: Image(uiImage: photo), name: self.$personName)
+                    PersonForm(photo: Image(uiImage: photo), name: self.$personName, saveImage: self.$saveImage)
                 }
                 else {
-                    PersonForm(photo: nil, name:self.$personName)
+                    PersonForm(photo: nil, name:self.$personName, saveImage: self.$saveImage)
                 }
             }
         }
@@ -71,8 +74,7 @@ struct ContentView: View {
         else if self.sheetMode == .imageSaver {
             
             // If the image was saved
-            if 1==1 {
-                // PROPER LOGIC CHECK NEEDED
+            if self.saveImage {
                 saveNameFace()
             }
 
@@ -82,8 +84,6 @@ struct ContentView: View {
     }
     
     func saveNameFace() {
-//        print("Name: \(self.personName)")
-
         let person = Person(name: personName)
         
         // Give the photo a name base on the UUID of the person.
@@ -94,17 +94,18 @@ struct ContentView: View {
         }
         
         self.people.append(person)
+        self.people.sort()
         saveDataToDocumentsDirectory()
     }
     
     // Reset data ready for next
     func reset() {
+        self.saveImage = false
         self.personImage = nil
         self.personName = ""
     }
     
     func saveDataToDocumentsDirectory() {
-//        let str = "Test Message"
         let encoder = JSONEncoder()
 
         if let data = try? encoder.encode(self.people) {
@@ -112,7 +113,6 @@ struct ContentView: View {
             
             do {
                 try data.write(to: url)
-//                let input = try String(contentsOf: url)
             } catch {
                 print(error.localizedDescription)
             }
@@ -132,11 +132,33 @@ struct ContentView: View {
                 fatalError("Cannot decode the people data.")
             }
         }
+        
+        people.sort()
+    }
+    
+    func deletePerson(at offsets: IndexSet) {
+        
+        people.sort()
+        
+        for offset in offsets {
+            // Remove file from documents area
+            let urlToRemove = Person.getDocumentsDirectory().appendingPathComponent(people[offset].photoFile)
+            do {
+                try FileManager.default.removeItem(at: urlToRemove)
+            }
+            catch {
+                print("Error deleting \(people[offset].photoFile) for \(people[offset].name)")
+            }
+        }
+        
+        people.remove(atOffsets: offsets)
+        
+        // Save our data back to store updated list.
+        saveDataToDocumentsDirectory()
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
-    //let person = Person(name: "Paul")
     static let people = [
         Person(name: "Paul Houghton"),
         Person(name: "Shane Houghton")

@@ -16,12 +16,12 @@ struct PersonRow: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 44, height: 44)
+                    .frame(width: 60, height: 60)
             }
             else {
                 Rectangle()
                     .fill(Color.secondary)
-                    .frame(width:44, height: 44)
+                    .frame(width:60, height: 60)
             }
             Text(self.person.name)
             Spacer()
@@ -38,16 +38,15 @@ struct PersonView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 200)
             }
             else {
                 Rectangle()
                     .fill(Color.secondary)
                     .frame(width:200, height: 200)
             }
-            Text(self.person.name)
             Spacer()
         }
+        .navigationTitle(self.person.name)
     }
 }
 
@@ -55,6 +54,7 @@ struct PersonForm: View {
     @Environment(\.presentationMode) var presentationMode
     var photo: Image?
     @Binding var name: String
+    @Binding var saveImage: Bool
     
     var body: some View {
         NavigationView {
@@ -83,10 +83,12 @@ struct PersonForm: View {
             .navigationBarItems(
                 leading: Button("Cancel") {
                     // Cancel and dismiss
+                    self.saveImage = false
                     self.presentationMode.wrappedValue.dismiss()
                 },
                 trailing: Button("Save") {
                     // Save and dismiss
+                    self.saveImage = true
                     self.presentationMode.wrappedValue.dismiss()
                 }
             )
@@ -97,8 +99,10 @@ struct PersonForm: View {
 struct PersonView_Previews: PreviewProvider {
     
     static var previews: some View {
-        PersonView(person: Person(name: "Paul Houghton"))
-        PersonForm(photo: Image("hat-person-phone"), name: .constant("Test"))
+        NavigationView {
+            PersonView(person: Person(name: "Paul Houghton"))
+        }
+        PersonForm(photo: Image("hat-person-phone"), name: .constant("Test"), saveImage: .constant(false))
         PersonRow(person: Person(name: "Paul Houghton"))
             .previewLayout(.fixed(width: 300, height: 70))
     }
