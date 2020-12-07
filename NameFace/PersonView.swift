@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct PersonRow: View {
     var person: Person
@@ -16,12 +17,12 @@ struct PersonRow: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 60, height: 60)
+                    .frame(width: 50, height: 50)
             }
             else {
                 Rectangle()
                     .fill(Color.secondary)
-                    .frame(width:60, height: 60)
+                    .frame(width:50, height: 50)
             }
             Text(self.person.name)
             Spacer()
@@ -29,20 +30,40 @@ struct PersonRow: View {
     }
 }
 
+struct PersonPin: Identifiable {
+    let id = UUID()
+    let coordinate: CLLocationCoordinate2D
+}
+
 struct PersonView: View {
     var person: Person
-    
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(
+            latitude: 51.459935, longitude: -0.968050
+        ),
+        span: MKCoordinateSpan(
+            latitudeDelta: 2, longitudeDelta: 2
+        )
+    )
+    @State private var pins: [PersonPin] = [
+        PersonPin(coordinate: .init(latitude: 51.459935, longitude: -0.968050))
+    ]
+        
     var body: some View {
         VStack {
             if let uiImage = Person.loadPhoto(photoFile: Person.getDocumentsDirectory().appendingPathComponent(self.person.photoFile) ) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
+                    .frame(width:200, height: 200)
             }
             else {
                 Rectangle()
                     .fill(Color.secondary)
                     .frame(width:200, height: 200)
+            }
+            Map(coordinateRegion: $region, annotationItems: pins) { pin in
+                MapPin(coordinate: pin.coordinate)
             }
             Spacer()
         }
