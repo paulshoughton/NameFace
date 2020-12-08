@@ -45,9 +45,7 @@ struct PersonView: View {
             latitudeDelta: 2, longitudeDelta: 2
         )
     )
-    @State private var pins: [PersonPin] = [
-        PersonPin(coordinate: .init(latitude: 51.459935, longitude: -0.968050))
-    ]
+    @State private var pins: [PersonPin] = [PersonPin]()
         
     var body: some View {
         VStack {
@@ -66,6 +64,23 @@ struct PersonView: View {
                 MapPin(coordinate: pin.coordinate)
             }
             Spacer()
+        }
+        .onAppear() {
+            self.region = MKCoordinateRegion(
+                center: CLLocationCoordinate2D(
+                    latitude: self.person.latitude, longitude: self.person.longitude
+                ),
+                span: MKCoordinateSpan(
+                    latitudeDelta: 2, longitudeDelta: 2
+                )
+            )
+            self.pins.append(
+                PersonPin(
+                    coordinate: .init(
+                        latitude: self.person.latitude,
+                        longitude: self.person.longitude)
+                )
+            )
         }
         .navigationTitle(self.person.name)
     }
@@ -121,10 +136,10 @@ struct PersonView_Previews: PreviewProvider {
     
     static var previews: some View {
         NavigationView {
-            PersonView(person: Person(name: "Paul Houghton"))
+            PersonView(person: Person(name: "Paul Houghton", latitude: 51.459935, longitude: -0.968050))
         }
         PersonForm(photo: Image("hat-person-phone"), name: .constant("Test"), saveImage: .constant(false))
-        PersonRow(person: Person(name: "Paul Houghton"))
+        PersonRow(person: Person(name: "Paul Houghton", latitude: 51.459935, longitude: -0.968050))
             .previewLayout(.fixed(width: 300, height: 70))
     }
 }

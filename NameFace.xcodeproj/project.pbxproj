@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		58063F7D257635BB008FD870 /* PersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58063F7C257635BB008FD870 /* PersonView.swift */; };
 		580CCC1B25777F0300B9EED3 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580CCC1A25777F0300B9EED3 /* ImageSaver.swift */; };
+		586B2725257F70570012B014 /* LocationFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 586B2724257F70570012B014 /* LocationFetcher.swift */; };
 		5880110E256F9E0A00EC1980 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5880110D256F9E0A00EC1980 /* Person.swift */; };
 		58801111256F9E6800EC1980 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58801110256F9E6800EC1980 /* ImagePicker.swift */; };
 		58D0B2B3256E486900BD4F77 /* NameFaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D0B2B2256E486900BD4F77 /* NameFaceApp.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		58063F7C257635BB008FD870 /* PersonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonView.swift; sourceTree = "<group>"; };
 		580CCC1A25777F0300B9EED3 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
+		586B2724257F70570012B014 /* LocationFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFetcher.swift; sourceTree = "<group>"; };
 		5880110D256F9E0A00EC1980 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		58801110256F9E6800EC1980 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		58D0B2AF256E486900BD4F77 /* NameFace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NameFace.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +66,7 @@
 				58D0B2B4256E486900BD4F77 /* ContentView.swift */,
 				5880110D256F9E0A00EC1980 /* Person.swift */,
 				58063F7C257635BB008FD870 /* PersonView.swift */,
+				586B2724257F70570012B014 /* LocationFetcher.swift */,
 				58801110256F9E6800EC1980 /* ImagePicker.swift */,
 				580CCC1A25777F0300B9EED3 /* ImageSaver.swift */,
 				58D0B2B6256E486A00BD4F77 /* Assets.xcassets */,
@@ -153,6 +156,7 @@
 				58063F7D257635BB008FD870 /* PersonView.swift in Sources */,
 				580CCC1B25777F0300B9EED3 /* ImageSaver.swift in Sources */,
 				5880110E256F9E0A00EC1980 /* Person.swift in Sources */,
+				586B2725257F70570012B014 /* LocationFetcher.swift in Sources */,
 				58801111256F9E6800EC1980 /* ImagePicker.swift in Sources */,
 				58D0B2B5256E486900BD4F77 /* ContentView.swift in Sources */,
 				58D0B2B3256E486900BD4F77 /* NameFaceApp.swift in Sources */,

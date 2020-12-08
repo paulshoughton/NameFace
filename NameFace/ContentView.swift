@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 enum SheetMode {
     case imagePicker, imageSaver
@@ -20,6 +21,8 @@ struct ContentView: View {
     @State private var personName: String = ""
     
     @State var people: [Person] = [Person]()
+    
+    let locationFetcher = LocationFetcher()
     
     var body: some View {
         NavigationView {
@@ -84,7 +87,13 @@ struct ContentView: View {
     }
     
     func saveNameFace() {
-        let person = Person(name: personName)
+        self.locationFetcher.start()
+        let currentLocation = self.locationFetcher.lastKnownLocation ?? CLLocationCoordinate2D(latitude: 51.459935, longitude: -0.968050)
+        
+        // I Don't think the location is being obtained.  Check.
+        
+        // Better error handling when coordinates are not known.
+        let person = Person(name: personName, latitude: currentLocation.latitude, longitude: currentLocation.longitude)
         
         // Give the photo a name base on the UUID of the person.
         let url = Person.getDocumentsDirectory().appendingPathComponent(person.photoFile)
@@ -160,8 +169,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static let people = [
-        Person(name: "Paul Houghton"),
-        Person(name: "Shane Houghton")
+        Person(name: "Paul Houghton", latitude: 51.459935, longitude: -0.968050),
+        Person(name: "Shane Houghton", latitude: 51.459935, longitude: -0.968050)
     ]
     
     static var previews: some View {
