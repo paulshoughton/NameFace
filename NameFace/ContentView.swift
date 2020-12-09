@@ -49,7 +49,7 @@ struct ContentView: View {
                     }
             )
         }
-        .onAppear(perform: loadDataFromDocumentsDirectory)
+        .onAppear(perform: startAppAndLoadData)
         .sheet(isPresented: $showingSheet, onDismiss: sheetDismissed) {
             
             if (self.sheetMode == .imagePicker) {
@@ -87,8 +87,10 @@ struct ContentView: View {
     }
     
     func saveNameFace() {
-        self.locationFetcher.start()
+        
         let currentLocation = self.locationFetcher.lastKnownLocation ?? CLLocationCoordinate2D(latitude: 51.459935, longitude: -0.968050)
+        
+        print("\(self.locationFetcher.lastKnownLocation!)")
         
         // I Don't think the location is being obtained.  Check.
         
@@ -126,6 +128,14 @@ struct ContentView: View {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    func startAppAndLoadData() {
+        //  Initialise location fetcher when app starts.
+        self.locationFetcher.start()
+        
+        // Load stored data.
+        loadDataFromDocumentsDirectory()
     }
     
     func loadDataFromDocumentsDirectory() {
