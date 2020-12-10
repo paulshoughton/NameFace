@@ -11,8 +11,8 @@ import MapKit
 struct Person: Identifiable, Codable, Comparable {
     var id = UUID()
     var name: String
-    var latitude: Double
-    var longitude: Double
+    var latitude: Double?
+    var longitude: Double?
     
     var photoFile: String {
         return "\(self.id).jpg"

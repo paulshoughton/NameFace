@@ -88,16 +88,19 @@ struct ContentView: View {
     
     func saveNameFace() {
         
-        let currentLocation = self.locationFetcher.lastKnownLocation ?? CLLocationCoordinate2D(latitude: 51.459935, longitude: -0.968050)
+        let person: Person
         
-        print("\(self.locationFetcher.lastKnownLocation!)")
-        
-        // I Don't think the location is being obtained.  Check.
+        if let currentLocation = self.locationFetcher.lastKnownLocation {
+            person = Person(name: personName, latitude: currentLocation.latitude, longitude: currentLocation.longitude)
+        }
+        else {
+            person = Person(name: personName)
+        }
         
         // Better error handling when coordinates are not known.
-        let person = Person(name: personName, latitude: currentLocation.latitude, longitude: currentLocation.longitude)
         
-        // Give the photo a name base on the UUID of the person.
+        
+        // Give the photo a name based on the UUID of the person.
         let url = Person.getDocumentsDirectory().appendingPathComponent(person.photoFile)
         
         if let jpegData = personImage?.jpegData(compressionQuality: 0.8) {

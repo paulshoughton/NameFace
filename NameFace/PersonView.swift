@@ -16,13 +16,15 @@ struct PersonRow: View {
             if let uiImage = Person.loadPhoto(photoFile: Person.getDocumentsDirectory().appendingPathComponent(self.person.photoFile) ) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(width: 50, height: 50)
+                    .clipShape(Circle())
             }
             else {
                 Rectangle()
                     .fill(Color.secondary)
                     .frame(width:50, height: 50)
+                    .clipShape(Circle())
             }
             Text(self.person.name)
             Spacer()
@@ -48,39 +50,60 @@ struct PersonView: View {
     @State private var pins: [PersonPin] = [PersonPin]()
         
     var body: some View {
-        VStack {
-            if let uiImage = Person.loadPhoto(photoFile: Person.getDocumentsDirectory().appendingPathComponent(self.person.photoFile) ) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width:200, height: 200)
+        ZStack {
+            if pins.count > 0 {
+                Map(coordinateRegion: $region, annotationItems: pins) { pin in
+                    MapPin(coordinate: pin.coordinate)
+                }
+                .padding(.top, 100.0)
             }
-            else {
-                Rectangle()
-                    .fill(Color.secondary)
-                    .frame(width:200, height: 200)
+            VStack {
+                if let uiImage = Person.loadPhoto(photoFile: Person.getDocumentsDirectory().appendingPathComponent(self.person.photoFile) ) {
+
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width:250, height: 250)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                        .shadow(radius: 10)
+                        
+
+                }
+                else {
+                    ZStack {
+                        Circle()
+                            .fill(Color.secondary)
+                            .frame(width:250, height: 250)
+                            .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                            .shadow(radius: 10)
+                        Image(systemName: "person.fill")
+                            .foregroundColor(.white)
+                            .font(.system(size: 150.0))
+                    }
+                }
+                Spacer()
             }
-            Map(coordinateRegion: $region, annotationItems: pins) { pin in
-                MapPin(coordinate: pin.coordinate)
-            }
-            Spacer()
+            
         }
         .onAppear() {
-            self.region = MKCoordinateRegion(
-                center: CLLocationCoordinate2D(
-                    latitude: self.person.latitude, longitude: self.person.longitude
-                ),
-                span: MKCoordinateSpan(
-                    latitudeDelta: 2, longitudeDelta: 2
+            if let latitude = self.person.latitude, let longitude = self.person.longitude {
+                self.region = MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(
+                        latitude: latitude, longitude: longitude
+                    ),
+                    span: MKCoordinateSpan(
+                        latitudeDelta: 2, longitudeDelta: 2
+                    )
                 )
-            )
-            self.pins.append(
-                PersonPin(
-                    coordinate: .init(
-                        latitude: self.person.latitude,
-                        longitude: self.person.longitude)
+                self.pins.append(
+                    PersonPin(
+                        coordinate: .init(
+                            latitude: latitude,
+                            longitude: longitude)
+                    )
                 )
-            )
+            }
         }
         .navigationTitle(self.person.name)
     }
