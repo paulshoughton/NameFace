@@ -17,6 +17,9 @@ struct ContentView: View {
     @State private var sheetMode: SheetMode = .imagePicker
     @State private var saveImage = false
     
+    @State private var showingActionSheet = false
+    @State private var imagePickerSourceType: UIImagePickerController.SourceType = .photoLibrary
+    
     @State private var personImage: UIImage?
     @State private var personName: String = ""
     
@@ -44,8 +47,7 @@ struct ContentView: View {
                 leading: EditButton(),
                 trailing:
                     Button("Add") {
-                        self.showingSheet = true
-                        self.sheetMode = .imagePicker
+                        self.showingActionSheet = true
                     }
             )
         }
@@ -53,7 +55,7 @@ struct ContentView: View {
         .sheet(isPresented: $showingSheet, onDismiss: sheetDismissed) {
             
             if (self.sheetMode == .imagePicker) {
-                ImagePicker(image: self.$personImage)
+                ImagePicker(image: self.$personImage, sourceType: self.imagePickerSourceType)
             }
             else {
                 if let photo = self.personImage {
@@ -64,6 +66,32 @@ struct ContentView: View {
                 }
             }
         }
+        .actionSheet(isPresented: $showingActionSheet) {
+            ActionSheet(title: Text("Choose Image Source"), message: Text("Select the source of your image."), buttons: [
+                .default(Text("Photo Library")) {
+                    self.showingSheet = true
+                    self.sheetMode = .imagePicker
+                    self.imagePickerSourceType = .photoLibrary
+                },
+                .default(Text("Camera")) {
+                    self.showingSheet = true
+                    self.sheetMode = .imagePicker
+                    #if targetEnvironment(simulator)
+                        self.imagePickerSourceType = .photoLibrary
+                    #else
+                        self.imagePickerSourceType = .camera
+                    #endif
+                },
+                .cancel()
+            ])
+        }
+        
+        
+        #if targetEnvironment(simulator)
+          // your simulator code
+        #else
+          // your real device code
+        #endif
         
     }
     
